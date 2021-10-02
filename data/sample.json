@@ -1,0 +1,66 @@
+{
+    "nodes": [
+        {
+            "id": "1",
+            "label": "Node 1",
+            "style": {},
+            "content": []
+        },
+        {
+            "id": "2",
+            "label": "Node 2",
+            "style": {},
+            "content": []
+        },
+        {
+            "id": "3",
+            "label": "Node 3",
+            "style": {},
+            "content": []
+        },
+        {
+            "id": "4",
+            "label": "Node 4",
+            "style": {},
+            "content": []
+        },
+        {
+            "id": "5",
+            "label": "Node 5",
+            "style": {},
+            "content": []
+        }
+    ],
+    "edges": [
+        {
+            "id": "e1",
+            "from": "1",
+            "to": "3",
+            "options": {}
+        },
+        {
+            "id": "e2",
+            "from": "3",
+            "to": "1",
+            "options": {}
+        },
+        {
+            "id": "e3",
+            "from": "1",
+            "to": "2",
+            "options": {}
+        },
+        {
+            "id": "e4",
+            "from": "2",
+            "to": "4",
+            "options": {}
+        },
+        {
+            "id": "e5",
+            "from": "2",
+            "to": "5",
+            "options": {}
+        }
+    ]
+}
