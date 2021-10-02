@@ -59,7 +59,7 @@ function coreRenameNode(newName) {
         let originalNode = nodes.get(selectedNodes[0]);
         originalNode.label = newName;
         nodes.update(originalNode);
-        syncServerRenameNode(originalNode);
+        syncServerPropChange(originalNode);
         return 0;
     } catch (error) {
         console.log(error);
@@ -134,7 +134,7 @@ function coreChangeColor(colorString) {
             else {
                 newNodes[i].color.background = colorString;
             }
-            syncServerPropChange(selectNodes[i], "cplor", colorString);
+            syncServerPropChange(newNodes[i]);
         }
         nodes.update(newNodes);
         return 0;
@@ -162,25 +162,63 @@ function zoomOutNetwork(){
 }
 
 function syncServerAddNode(nodeStruct) {
-    
+    syncSignalSend(
+        {
+            "version": uuid4(),
+            "operation": "ADD",
+            "property": "node",
+            "value": JSON.stringify(nodeStruct)
+        }
+    );
 }
 
 function syncServerAddEdge(newEdge) {
-
-}
-
-function syncServerRenameNode(nodeStruct) {
-
+    syncSignalSend(
+        {
+            "version": uuid4(),
+            "operation": "ADD",
+            "property": "edge",
+            "value": JSON.stringify(newEdge)
+        }
+    );
 }
 
 function syncServerRemoveNodes(nodeIDList) {
-
+    syncSignalSend(
+        {
+            "version": uuid4(),
+            "operation": "DEL",
+            "property": "node",
+            "value": JSON.stringify(nodeIDList)
+        }
+    );
 }
 
 function syncServerRemoveEdges(edgeIDList) {
-
+    syncSignalSend(
+        {
+            "version": uuid4(),
+            "operation": "DEL",
+            "property": "edge",
+            "value": JSON.stringify(edgeIDList)
+        }
+    );
 }
 
-function syncServerPropChange(nodeID, prop, newValue){
+function syncServerPropChange(nodeStruct){
+    syncSignalSend(
+        {
+            "version": uuid4(),
+            "operation": "MOD",
+            "property": "node",
+            "value": JSON.stringify(nodeStruct)
+        }
+    );
+}
 
+function syncSignalSend(jsonObject){
+    fetch("http://172.26.17.47/write", {
+        method: 'POST',
+        body: JSON.stringify(jsonObject)
+    });
 }
