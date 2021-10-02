@@ -31,3 +31,7 @@ In the following passage, we call `node`, `edge`, `content`
 | `NOP`     | --                                     | Do nothing, client is already up-to-date                     |
 | `NEW`     | Create a new Board                     | Completely Reload the JSON File and refresh all (since client is 100+ version behind server) |
 
+=======
+# MAGC Map
+
+An interactive Knowledge Map
