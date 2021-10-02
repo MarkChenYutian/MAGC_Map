@@ -542,6 +542,7 @@ input[type=submit] {
 }
 
 .gallery__caption {
+    font-family: Arial, sans-serif;
     text-align: center;
 }
 
@@ -666,3 +667,108 @@ screen and (max-height:480px) {
         font-size: 22px
     }
 }
+
+.container {
+    background-color: #9191e9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+  }
+  
+  .popup {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    bottom: 0;
+    right: 0;
+    background-color: transparent;
+    z-index: 1002;
+    visibility: hidden;
+    opacity: 0;
+    overflow: hiden;
+    transition: 0.64s ease-in-out;
+  }
+  .popup-inner {
+    position: relative;
+    bottom: -100vw;
+    right: -100vh;
+    display: block;
+    align-items: center;
+    max-width: 1000px;
+    max-height: 800px;
+    width: 40%;
+    height: 50%;
+    background-color: #fff;
+    transform: rotate(32deg);
+    transition: 0.64s ease-in-out;
+    border-radius: 10px;
+    overflow-y: auto;
+  }
+  
+  .popup-newinner {
+    position: relative;
+    bottom: -100vw;
+    right: -100vh;
+    display: block;
+    align-items: center;
+    max-width: 1000px;
+    max-height: 800px;
+    width: 60%;
+    height: 80%;
+    background-color: #fff;
+    transform: rotate(32deg);
+    transition: 0.64s ease-in-out;
+    border-radius: 10px;
+    overflow-y: auto;
+  }
+  
+  .popup:target .popup-newinner {
+    bottom: 0;
+    right: 0;
+    transform: rotate(0);
+  }
+  
+  .popup:target {
+    visibility: visible;
+    opacity: 1;
+  }
+  .popup:target .popup-inner {
+    bottom: 0;
+    right: 0;
+    transform: rotate(0);
+  }
+  .popup__close {
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+    width: 3rem;
+    height: 3rem;
+    z-index: 1003;
+    color: #fff;
+    line-height: 3rem;
+    text-align: center;
+    cursor: pointer;
+    text-decoration: none;
+    border-radius: 50%;
+    transition: 0.5s;
+  }
+  .popup__close :hover{
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  }
+  .text{
+    border-bottom: solid 2px #333333;
+    background-color: transparent;
+  }
+  
+  .popup_in{
+    margin: 20% 3rem;
+  }
+  
+  .toc_ignore{
+    font-weight: 300;
+  }

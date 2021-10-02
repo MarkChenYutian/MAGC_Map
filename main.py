@@ -1,7 +1,8 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from os.path import exists
 import json
 import time
+import os
 
 app = Flask(__name__)
 
@@ -26,17 +27,36 @@ dumper = JSONDumper()
 
 @app.route("/")
 def indexRoot():
-    with open("./static/nodeMap.html", "r") as f:
+    with open("./static/mainpage.html", "r") as f:
         rootHTML = f.read()
         return rootHTML
 
 
 @app.route("/board/<boardName>")
 def indexBoard(boardName):
+    with open(f"./stats/totVisit.json", "r") as f:
+        data = json.load(f)
+
+    if boardName in data.keys(): data[boardName] += 1
+    else: data[boardName] = 1
+
+    with open(f"./stats/totVisit.json", "w") as f:
+        json.dump(data, f)
+
     with open(f"./static/nodeMap.html", "r") as f:
         boardHTML = f.read().replace("Sample Title", boardName).replace("sample", boardName)
         return boardHTML
 
+
+@app.route("/getBoard", methods=["POST", "GET"])
+def getBoard():
+    with open(f"./stats/totVisit.json", "r") as f:
+        data = json.load(f)
+
+    boardStat = []
+    for _ in os.listdir("./data"):
+        boardStat.append((_.split(".json")[0], data.get(_.split(".json")[0])))
+    return json.dumps(boardStat)
 
 @app.route("/write", methods=["POST"])
 def writeFile():
@@ -66,8 +86,15 @@ def writeFile():
             data["edges"] = edgeLst
         elif writeProperty == "content":
             contentDic = data.get("contents")
-            contentDic.update(writeValue)
+            contentDic.update(writeValue[0])
+
+            nodeLst = data.get("nodes")
+            for node in nodeLst:
+                if node["id"] == writeValue[1]: node["block"].append(list(writeValue[0].keys())[0])
+
             data["contents"] = contentDic
+            data["nodes"] = nodeLst
+
         dumper.dump(data, f"./data/{writeSrc}.json")
 
     # DEL Operation
@@ -77,13 +104,21 @@ def writeFile():
         f.close()
         if writeProperty == 'node':
             nodeLst = data.get("nodes")
-            nodeLst.remove(writeValue)
+            try: nodeLst.remove(writeValue)
+            except ValueError: None
         elif writeProperty == 'edge':
             edgeLst = data.get("edges")
-            edgeLst.remove(writeValue)
+            try: edgeLst.remove(writeValue)
+            except ValueError: None
         elif writeProperty == "content":
             contentDic = data.get("contents")
             del contentDic[list(writeValue.keys())[0]]
+
+            nodeLst = data["nodes"]
+            for node in nodeLst:
+                node["block"].remove(list(writeValue.keys())[0])
+            data["nodes"] = nodeLst
+
         dumper.dump(data, f"./data/{writeSrc}.json")
 
     # MOD Operation
@@ -111,8 +146,6 @@ def writeFile():
         boardHTML = f.read().replace("Sample Title", writeSrc).replace("\"sample\"", writeSrc)
         return boardHTML
 
-
-@app.route("/read/<boardName>", methods=["GET"])
-def readFile(boardName):
-    with open(f'./data/{boardName}.json', 'r') as f:
-        return f.read()
+@app.route("/read/<filename>", methods=["GET"])
+def readFile(filename):
+    with open("./data/{}.json".format(filename), "r") as f: return f.read()

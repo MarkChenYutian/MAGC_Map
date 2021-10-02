@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Simple Gallery</title>
+    <meta name="description" content="Responsive gallery one-page template template">
+    <meta name="keywords" content="gallery, gallery template, html5 template, css3 template">
+    <link rel="shortcut icon" href="/static/favicon.ico">
+    <link rel="apple-touch-icon" href="/static/images/favicons/apple-touch-icon.png">
+    <link rel="apple-touch-icon-precomposed" href="/static/images/favicons/apple-touch-icon-precomposed.png">
+    <link
+        href="https://fonts.googleapis.com/css?family=PT+Sans&amp;subset=latin,cyrillic%7CPT+Serif&amp;subset=latin,cyrillic"
+        rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="/static/css/screen.min.css">
+    <link rel="stylesheet" href="/static/fonts/site-icons/font_2847121_wpx05i5m34f/iconfont.css">
+    <script src="https://kit.fontawesome.com/36ec8abd09.js" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="/static/nodeMapUtil.js"></script>
+</head>
+
+<body>
+    <hader class="page-header">
+        <div class="page-header__inner">
+            <div class="page-header__group">
+                <h1 class="page-header__title"> </h1>
+            </div>
+        </div>
+    </hader>
+
+
+    <div class="page-content">
+        <div class="search-box">
+            <input class="search-txt" id="search_text" type="text" placeholder="Type to search">
+            <button class="search-btn" id="button">
+                <i class="fas fa-search"></i>
+                </a>
+        </div>
+        <script>
+            document.getElementById("button").onclick = function () {
+                let a = document.querySelectorAll("div.gallery__isle");
+                for (let i = 0; i < a.length; i++) {
+
+                    a[i].style.display = "block";
+
+                }
+                let b = document.getElementById("search_text")
+                for (let i = 0; i < a.length; i++) {
+                    if (a[i].getAttribute("contentTitle").indexOf(b.value) == -1) {
+                        a[i].style.display = "none";
+                    }
+                }
+            }
+
+            function syncGenerateHome() {
+                var httpRequest = new XMLHttpRequest();
+                httpRequest.addEventListener("load", generateHomePage);
+                httpRequest.open('GET', "/getBoard");
+                httpRequest.send();
+            }
+
+            function generateHomePage() {
+                let allBoardNames = this.responseText;
+                console.log(allBoardNames);
+                let boardNameList = JSON.parse(allBoardNames);
+                let automatedElement = document.getElementById("automated_area");
+                for (let idx = 0; idx < boardNameList.length; idx++) {
+                    automatedElement.innerHTML += `
+                    <div class="gallery__isle" contentTitle="` + boardNameList[idx][0] + `">
+                        <div class="gallery__isle-inner">
+                            <div class="gallery__isle-content">
+                                <figure class="gallery__preview">
+                                    <div class="gallery__preview-image"><img src="/static/images/blocks/gallery/minion.jpeg" alt="` + boardNameList[idx][0] + `"></div>
+                                    <figcaption class="gallery__preview-caption">
+                                        <div class="gallery__preview-info">
+                                            <h2 class="gallery__preview-title">` + boardNameList[idx][0] + `</h2>
+                                            <div class="gallery__preview-links">
+                                                <a class="gallery__preview-link gallery__preview-link_role_see">` + boardNameList[idx][1] + `</a>
+                                                <a class="gallery__preview-link gallery__preview-link_role_edit" href="/board/` + boardNameList[idx][0] + `">Edit it</a>
+                                            </div>
+                                        </div>
+                                    </figcaption>
+                                </figure>
+                            </div>
+                        </div>
+                        <h1 class="gallery__caption">` + boardNameList[idx][0] + `</h1>
+                    </div>
+                    `;
+                }
+            }
+        </script>
+        <main class="page-content__main">
+            <div id="automated_area" style="display: flex;">
+
+            </div>
+
+            <section class="page-content__gallery">
+                <div class="gallery">
+                    <div class="gallery__inner">
+                        <div class="gallery__flow">
+
+                            <div class="gallery__isle" contentTitle="Eighth Thought"
+                                onclick="window.location.href='#newBoard'">
+                                <div class="gallery__isle-inner">
+                                    <div class="gallery__isle-content">
+                                        <figure class="gallery__preview">
+                                            <div class="gallery__preview-image"><img src="/static/img/more.svg"
+                                                    style="max-height: 100px;" alt="first Thought"></div>
+                                            <figcaption class="gallery__preview-caption">
+                                                <div class="gallery__preview-info">
+                                                    <h2 class="gallery__preview-title">Create New Board</h2>
+                                                    <div class="gallery__preview-links">
+                                                    </div>
+                                                </div>
+                                            </figcaption>
+                                        </figure>
+                                    </div>
+                                </div>
+                                <h1 class="gallery__caption">Create New Board</h1>
+                            </div>
+
+                            <div class="popup" id="newBoard">
+                                <div class="popup-inner" style=" background-color: rgba(205, 205, 205, 0.5); 
+                    background-position: bottom right;
+                    backdrop-filter: blur(6px);
+                    -webkit-backdrop-filter: blur(6px);">
+                                    <div class="popup_in">
+                                        <h2 class="toc_ignore" style="color: #333;">Rename a Node: </h2>
+                                        <form class="text" style="background-color: transparent;">
+                                            <input type="text" style="background-color: transparent;"
+                                                id="renameInputBox">
+                                        </form>
+                                        <div class="popup__close" style="background-color: rgba(255, 255, 255, 0.5);
+                                            background-position: bottom right;
+                                            backdrop-filter: blur(6px);
+                                            -webkit-backdrop-filter: blur(6px);" onclick="window.location.href='#'">
+                                            <input type="button" name="close" value="X"
+                                                style="background-color:rgba(255,255,255,0);color: #e71212;" />
+                                        </div>
+
+                                    </div>
+                                    <div
+                                        style="display: flex; flex-direction: row-reverse; margin-right: 3rem; margin-left: 3rem;">
+                                        <button class="btn--success" href="#"
+                                            onclick="coreRenameNode(document.getElementById('renameInputBox').value); window.location.href='#';">&nbsp;&nbsp;Confirm&nbsp;&nbsp;</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <footer class="page-footer">
+        <div class="page-footer__inner">
+            <div class="page-footer__group">
+                <p class="page-footer__text">by. MAGC GROUP&nbsp;
+                    <a class="page-footer__text-link" href="https://github.com/MarkChenYutian/MAGC_Map"></a>
+                </p>
+            </div>
+        </div>
+    </footer>
+</body>
+<script>syncGenerateHome();</script>
+</html>

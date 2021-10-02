@@ -170,8 +170,16 @@ function addContentBlock(nodeID, type){
         "context": ""
     };
     nodeContentLink[nodeID].push(contentID);
-    syncServerAddContent(contentID, contentDict[contentID]);
+    syncServerAddContent(contentID, contentDict[contentID], nodeID);
+    return contentID;
 }
+
+function deleteBlock(blockID){
+    delContentBlock(blockID);
+    let newBlockContainer = document.getElementById(blockID)
+    newBlockContainer.style.display = "none";
+}
+
 
 function modContentBlock(blockID, newContext){
     contentDict[blockID]["context"] = newContext;
@@ -202,6 +210,21 @@ function nodeStructToJSON(nodeStruct, contents) {
     }
 }
 
+function blockEditor(blockID){
+    let container = document.getElementById(blockID);
+    container.innerHTML = "<textarea id='" + blockID + "_editor' style='resize:none; background: #ddd;'>" + contentDict[blockID]["context"] + "</textarea>"
+    container.innerHTML += `<button onclick="confirmBlock('` + blockID +`')">Finish</button>`
+    // modContentBlock(blockID, newMessage);
+}
+
+function confirmBlock(blockID){
+    let newBlockContent = document.getElementById(blockID + "_editor").value;
+    modContentBlock(blockID, newBlockContent);
+    let container = document.getElementById(blockID);
+    container.innerHTML = renderBlock(contentDict[blockID], blockID);
+    MathJax.Hub.Queue(['Typeset',MathJax.Hub]);
+}
+
 function edgeStructToJSON(edgeStruct) {
     return {
         "id": edgeStruct.id,
@@ -218,14 +241,14 @@ function getBoardName(){
     return subtokens[0];
 }
 
-function syncServerAddContent(contentBlockID, contentBlock){
+function syncServerAddContent(contentBlockID, contentBlock, nodeID){
     let boardName = getBoardName();
     syncSignalSend(
         {
             "version": uuid4(),
             "operation": "ADD",
             "property": "content",
-            "value": { [contentBlockID] : contentBlock },
+            "value": [{ [contentBlockID] : contentBlock}, nodeID],
             "src": boardName
         }
     );

@@ -1,7 +1,6 @@
 function synchronizeLoad(fileName) {
     var httpRequest = new XMLHttpRequest();
     httpRequest.addEventListener("load", getData);
-    console.log("---");
     httpRequest.open('GET', "/read/" + fileName);
     httpRequest.send();
 }
@@ -109,8 +108,10 @@ function setupNetwork(){
 
     eventUpdateScale();
 
-    network.on('selectNode', function(properties) {
-        window.location.href = "#" + properties.nodes;
+    network.on('doubleClick', function(properties) {
+        let displayNode = network.getSelectedNodes();
+        window.location.href = "#popupMenu";
+        drawOnCanvas(displayNode);
     });
 
     network.on('zoom', function(properties) {
@@ -120,4 +121,44 @@ function setupNetwork(){
 
 function loadFile(fileName) {
     synchronizeLoad(fileName);
+}
+
+function renderBlock(contentBlock, contentID){
+    return "<div id='" + contentID + "'>" + 
+        marked(contentBlock["context"] + "\n\n") + 
+        `<div style='display:flex; flex-direction: row; justify-content:space-between'>
+            <font size=1>Message Block ID:` + contentID  + `</font>
+            <div>
+                <button onclick="blockEditor('` + contentID + `')"> <img src="/static/img/edit.svg" style="display: inline-block; height: 1.5rem; width: 1.5rem; margin-bottom: -0.1rem; padding: 3px"></button>
+                <button onclick="deleteBlock('` + contentID + `')"><img src="/static/img/delete.svg" style="display: inline-block; height: 1.5rem; width: 1.5rem; margin-bottom: -0.1rem; padding: 3px"></button>
+            </div>
+        </div>` + 
+        "</div>"
+}
+
+function addBlockToNodeGUI(nodeID){
+    let canvas = document.getElementById("popup_contentArea");
+    let newBlockID = addContentBlock(nodeID, "markdown");
+    contentDict[newBlockID]["context"] = "*EMPTY BLOCK*"
+    canvas.innerHTML += renderBlock(contentDict[newBlockID], newBlockID, nodeID);
+}
+
+
+function drawOnCanvas(displayNode){
+    let canvas = document.getElementById("popup_contentArea");
+    canvas.innerHTML = `<div style="display: flex; justify-content:space-between;">
+    <h1><b>` + nodes.get(displayNode[0]).label + `</b></h1>
+    <button onclick="addBlockToNodeGUI('` + displayNode[0] + `')" style="height: 2rem; margin-top: 1rem;"><img src="/static/img/addTextBlock.svg" style="display: inline-block; height: 1.5rem; width: 1.5rem; margin-bottom: -0.1rem; padding: 3px"></button>
+    </div>`;
+    console.log(displayNode);
+    if (displayNode.length > 1 || displayNode.length == 0){
+        return 2;
+    }
+    for (let index = 0; index < nodeContentLink[displayNode[0]].length; index ++){
+        let contentID = nodeContentLink[displayNode[0]][index];
+        let contentBlock = contentDict[contentID];
+        console.log(contentBlock);
+        canvas.innerHTML += renderBlock(contentBlock, contentID, displayNode[0])
+    }
+    MathJax.Hub.Queue(['Typeset',MathJax.Hub]);
 }
