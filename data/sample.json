@@ -1,1 +1,122 @@
-{"nodes": [{"id": "1", "label": "Node 1", "style": {}, "content": []}, {"id": "3", "label": "Node 3", "style": {}, "content": []}, {"id": "4", "label": "Node 4", "style": {}, "content": []}, {"id": "5", "label": "Node 5", "style": {}, "content": []}, {"id": "6", "label": "Node 6", "style": {}, "content": []}, {"id": "3af067ea-7023-4f80-ae9b-f8acee5b7bc8", "label": "test", "style": {"color": "rgba(0, 0, 0, 0)"}, "content": []}, {"id": "9b04c015-65d8-4d6d-98ce-f9cad80c6074", "label": "test", "style": {"color": "rgba(0, 0, 0, 0)"}, "content": []}, {"id": "e18a0e66-5461-4f90-8dad-2e0919f1e17d", "label": "test", "style": {"color": "rgba(0, 0, 0, 0)"}, "content": []}, {"id": "c6b51a04-95fc-4c14-8915-5ab23b3dce57", "label": "test", "style": {"color": "rgba(0, 0, 0, 0)"}, "content": []}, {"id": "2", "label": "Node 2", "style": {"color": "#EBEBC0"}, "content": []}], "edges": [{"id": "e2", "from": "3", "to": "1", "options": {}}, {"id": "e3", "from": "1", "to": "2", "options": {}}, {"id": "e4", "from": "2", "to": "4", "options": {}}, {"id": "e5", "from": "2", "to": "5", "options": {}}]}
+{
+    "nodes": [
+        {
+            "id": "1",
+            "label": "21241 Linear Algebra",
+            "style": {
+                "color": "#ffffff"
+            },
+            "block": ["aaaaa-bbbb-cccc"]
+        },
+        {
+            "id": "cecb3ddb-8065-4685-b059-eb6785180162",
+            "label": "Matrix Operation",
+            "style": {
+                "color": "#ffffff"
+            },
+            "block": []
+        },
+        {
+            "id": "ee28aa17-5f68-4fad-b245-396a79b0964c",
+            "label": "Gaussian Elimination",
+            "style": {
+                "color": "#ffffff"
+            },
+            "block": []
+        },
+        {
+            "id": "7ca1a136-06de-463a-8bc5-5d6135d81929",
+            "label": "Vector Space",
+            "style": {
+                "color": "#ffffff"
+            },
+            "block": []
+        },
+        {
+            "id": "6d1a6c2e-3118-4f18-8a2a-b05701d33089",
+            "label": "Test",
+            "style": {
+                "color": "#ffffff"
+            },
+            "block": []
+        },
+        {
+            "id": "dab2d812-e9fc-49b7-8365-4af6cdc0d135",
+            "label": "Test 2",
+            "style": {
+                "color": "#ffffff"
+            },
+            "block": []
+        },
+        {
+            "id": "c3083619-f869-44cd-95ea-3d758a61a9f4",
+            "label": "Test",
+            "style": {
+                "color": "rgba(255, 255, 255, 1)"
+            },
+            "block": []
+        }
+    ],
+    "edges": [
+        {
+            "id": "e96a9479-2cd8-44d0-885f-3bd3c86d8a81",
+            "from": "0a7410a9-207f-41a8-a6ec-c086efd865f1",
+            "to": "febe7a46-9027-451a-909b-6b37be1feb70",
+            "options": {}
+        },
+        {
+            "id": "15676449-ab5d-488d-b304-35ede4931943",
+            "from": "3",
+            "to": "20edf712-3c2a-40f5-8559-31cdcdf0027b",
+            "options": {}
+        },
+        {
+            "id": "4e0bff10-73d2-471f-a104-11bb2baa7722",
+            "from": "cfa91fb6-84ed-4755-bd53-04a7c80c7d99",
+            "to": "cecb3ddb-8065-4685-b059-eb6785180162",
+            "options": {}
+        },
+        {
+            "id": "40df6b32-dc52-46a8-b229-acd9502c7c5d",
+            "from": "cecb3ddb-8065-4685-b059-eb6785180162",
+            "to": "ee28aa17-5f68-4fad-b245-396a79b0964c",
+            "options": {}
+        },
+        {
+            "id": "171a01b3-fc70-4860-9100-da0045e6fb24",
+            "from": "cfa91fb6-84ed-4755-bd53-04a7c80c7d99",
+            "to": "7ca1a136-06de-463a-8bc5-5d6135d81929",
+            "options": {}
+        },
+        {
+            "id": "9b630bee-8ecd-426f-8c7e-9b4b44d57d48",
+            "from": "cecb3ddb-8065-4685-b059-eb6785180162",
+            "to": "7ca1a136-06de-463a-8bc5-5d6135d81929",
+            "options": {}
+        },
+        {
+            "id": "675c28ea-8536-47a0-8213-77472d3fe91c",
+            "from": "6d1a6c2e-3118-4f18-8a2a-b05701d33089",
+            "to": "cfa91fb6-84ed-4755-bd53-04a7c80c7d99",
+            "options": {}
+        },
+        {
+            "id": "359c3380-4581-4643-839b-545e80418afe",
+            "from": "dab2d812-e9fc-49b7-8365-4af6cdc0d135",
+            "to": "cfa91fb6-84ed-4755-bd53-04a7c80c7d99",
+            "options": {}
+        },
+        {
+            "id": "a549fd22-ad28-4d74-bf84-2babf294244b",
+            "from": "c3083619-f869-44cd-95ea-3d758a61a9f4",
+            "to": "6d1a6c2e-3118-4f18-8a2a-b05701d33089",
+            "options": {}
+        }
+    ],
+    "contents": {
+        "aaaaa-bbbb-cccc" : {
+            "type": "markdown",
+            "block": "testFile"
+        }
+    }
+}

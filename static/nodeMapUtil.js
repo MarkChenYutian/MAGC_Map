@@ -163,14 +163,23 @@ function zoomOutNetwork(){
     eventUpdateScale();
 }
 
-function nodeStructToJSON(nodeStruct) {
+function addContentBlock(nodeID, type){
+    let contentID = uuid4();
+    contentDict[contentID] = {
+        "type": type,
+        "context": ""
+    };
+    nodeContentLink[nodeID].push(contentID);
+}
+
+function nodeStructToJSON(nodeStruct, contents) {
     return {
         "id": nodeStruct.id,
         "label": nodeStruct.label,
         "style": {
-            "color": nodeStruct.color == undefined? "rgba(0, 0, 0, 0)" : nodeStruct.color.background
+            "color": nodeStruct.color == undefined? "rgba(255, 255, 255, 1)" : nodeStruct.color.background
         },
-        "content": nodeStruct.content == undefined? [] : nodeStruct.content
+        "block": contents
     }
 }
 
@@ -184,60 +193,87 @@ function edgeStructToJSON(edgeStruct) {
 }
 
 function syncServerAddNode(nodeStruct) {
+    let tokens = window.location.href.split("/");
+    let boardName = tokens[tokens.length - 1];
     syncSignalSend(
         {
             "version": uuid4(),
             "operation": "ADD",
             "property": "node",
-            "value": nodeStructToJSON(nodeStruct)
+            "value": nodeStructToJSON(nodeStruct, []),
+            "src": boardName
         }
     );
 }
 
 function syncServerAddEdge(newEdge) {
+    let tokens = window.location.href.split("/");
+    let boardName = tokens[tokens.length - 1];
     syncSignalSend(
         {
             "version": uuid4(),
             "operation": "ADD",
             "property": "edge",
-            "value": edgeStructToJSON(newEdge)
+            "value": edgeStructToJSON(newEdge),
+            "src": boardName
         }
     );
 }
 
 function syncServerRemoveNodes(nodeList) {
+    let tokens = window.location.href.split("/");
+    let boardName = tokens[tokens.length - 1];
     for (let i = 0; i < nodeList.length; i ++){
         syncSignalSend(
             {
                 "version": uuid4(),
                 "operation": "DEL",
                 "property": "node",
-                "value": nodeStructToJSON(nodeList[i])
+                "value": nodeStructToJSON(nodeList[i], nodeContentLink[nodeList[i].id]),
+                "src": boardName
             }
         );
     }
 }
 
 function syncServerRemoveEdges(edgeList) {
+    let tokens = window.location.href.split("/");
+    let boardName = tokens[tokens.length - 1];
     for (let i = 0; i < edgeList.length; i ++){
         syncSignalSend(
             {
                 "version": uuid4(),
                 "operation": "DEL",
                 "property": "edge",
-                "value": edgeStructToJSON(edgeList[i])
+                "value": edgeStructToJSON(edgeList[i]),
+                "src": boardName
             }
         );
     }
 }
 
 function syncServerPropChange(nodeStruct){
+    let tokens = window.location.href.split("/");
+    let boardName = tokens[tokens.length - 1];
     syncSignalSend(
         {
             "version": uuid4(),
             "operation": "MOD",
             "property": "node",
-            "value": nodeStructToJSON(nodeStruct)
+            "value": nodeStructToJSON(nodeStruct, nodeContentLink[nodeStruct.id]),
+            "src": boardName
+        }
+    );
+}
+
+function createNewBoard(boardName){
+    syncSignalSend(
+        {
+            "version": "init",
+            "operation": "NEW",
+            "property": "",
+            "value": "",
+            "src": boardName
         }
     );
 }

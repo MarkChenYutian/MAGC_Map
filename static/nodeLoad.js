@@ -9,6 +9,8 @@ function synchronizeLoad(fileName) {
 var nodes;
 var edges;
 var network;
+var contentDict = {};
+var nodeContentLink = {};
 
 function getData() {
     let rawJSON = this.responseText;
@@ -22,10 +24,11 @@ function getData() {
                 label: dataObject["nodes"][i]["label"],
                 color: {
                     background: dataObject["nodes"][i]["style"]["color"]
-                },
-                content: dataObject["nodes"][i]["content"]
+                }
             }
-        )
+        );
+        console.log(dataObject["nodes"][i]["id"]);
+        nodeContentLink[dataObject["nodes"][i]["id"]] = dataObject["nodes"][i]["block"];
     }
     for (let i = 0; i < dataObject["edges"].length; i ++){
         edgeList.push(
@@ -35,6 +38,9 @@ function getData() {
                 to: dataObject["edges"][i]["to"]
             }
         )
+    }
+    for (const [contentID, contentBlock] of Object.entries(dataObject["contents"])) {
+        contentDict[contentID] = contentBlock;
     }
     nodes = new vis.DataSet(nodeList);
     edges = new vis.DataSet(edgeList);
