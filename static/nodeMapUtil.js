@@ -170,6 +170,25 @@ function addContentBlock(nodeID, type){
         "context": ""
     };
     nodeContentLink[nodeID].push(contentID);
+    syncServerAddContent(contentID, contentDict[contentID]);
+}
+
+function modContentBlock(blockID, newContext){
+    contentDict[blockID]["context"] = newContext;
+    syncServerModContent(contentID, contentDict[blockID]);
+}
+
+function delContentBlock(blockID){
+    let deletedBlock = JSON.stringify(contentDict[blockID]);
+    contentDict[blockID] = undefined;
+    for (const [nodeID, contentIDList] of Object.entries(nodeContentLink)){
+        nodeContentLink[nodeID] = contentIDList.filter(
+            function(value, index, arr){
+                return value != blockID;
+            }
+        )
+    }
+    syncServerDelContent(blockID, JSON.parse(deletedBlock));
 }
 
 function nodeStructToJSON(nodeStruct, contents) {
@@ -192,9 +211,54 @@ function edgeStructToJSON(edgeStruct) {
     }
 }
 
-function syncServerAddNode(nodeStruct) {
+function getBoardName(){
     let tokens = window.location.href.split("/");
-    let boardName = tokens[tokens.length - 1];
+    let lastToken = tokens[tokens.length - 1];
+    let subtokens = lastToken.split(/\.html|#|\?/);
+    return subtokens[0];
+}
+
+function syncServerAddContent(contentBlockID, contentBlock){
+    let boardName = getBoardName();
+    syncSignalSend(
+        {
+            "version": uuid4(),
+            "operation": "ADD",
+            "property": "content",
+            "value": { contentBlockID : contentBlock },
+            "src": boardName
+        }
+    );
+}
+
+function syncServerModContent(contentBlockID, contentBlock){
+    let boardName = getBoardName();
+    syncSignalSend(
+        {
+            "version": uuid4(),
+            "operation": "MOD",
+            "property": "content",
+            "value": { contentBlockID : contentBlock },
+            "src": boardName
+        }
+    );
+}
+
+function syncServerDelContent(contentBlockID, contentBlock){
+    let boardName = getBoardName();
+    syncSignalSend(
+        {
+            "version": uuid4(),
+            "operation": "DEL",
+            "property": "content",
+            "value": { contentBlockID : contentBlock },
+            "src": boardName
+        }
+    );
+}
+
+function syncServerAddNode(nodeStruct) {
+    let boardName = getBoardName();
     syncSignalSend(
         {
             "version": uuid4(),
@@ -207,8 +271,7 @@ function syncServerAddNode(nodeStruct) {
 }
 
 function syncServerAddEdge(newEdge) {
-    let tokens = window.location.href.split("/");
-    let boardName = tokens[tokens.length - 1];
+    let boardName = getBoardName();
     syncSignalSend(
         {
             "version": uuid4(),
@@ -221,8 +284,7 @@ function syncServerAddEdge(newEdge) {
 }
 
 function syncServerRemoveNodes(nodeList) {
-    let tokens = window.location.href.split("/");
-    let boardName = tokens[tokens.length - 1];
+    let boardName = getBoardName();
     for (let i = 0; i < nodeList.length; i ++){
         syncSignalSend(
             {
@@ -237,8 +299,7 @@ function syncServerRemoveNodes(nodeList) {
 }
 
 function syncServerRemoveEdges(edgeList) {
-    let tokens = window.location.href.split("/");
-    let boardName = tokens[tokens.length - 1];
+    let boardName = getBoardName();
     for (let i = 0; i < edgeList.length; i ++){
         syncSignalSend(
             {
@@ -253,8 +314,7 @@ function syncServerRemoveEdges(edgeList) {
 }
 
 function syncServerPropChange(nodeStruct){
-    let tokens = window.location.href.split("/");
-    let boardName = tokens[tokens.length - 1];
+    let boardName = getBoardName();
     syncSignalSend(
         {
             "version": uuid4(),
