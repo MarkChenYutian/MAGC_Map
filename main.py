@@ -61,7 +61,7 @@ def writeFile():
             edgeLst.remove(writeValue)
         elif writeProperty == "content":
             contentDic = data.get("contents")
-            for key in writeValue.keys(): del contentDic[key]
+            del contentDic[list(writeValue.keys())[0]]
         with open(f"./data/{writeSrc}.json", "w") as f: json.dump(data, f)
         f.close()
 
