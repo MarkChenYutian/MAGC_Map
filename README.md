@@ -30,8 +30,3 @@ In the following passage, we call `node`, `edge`, `content`
 | `SYC`     | Request sync from Server               | Provide later versions to client                             |
 | `NOP`     | --                                     | Do nothing, client is already up-to-date                     |
 | `NEW`     | Create a new Board                     | Completely Reload the JSON File and refresh all (since client is 100+ version behind server) |
-
-=======
-# MAGC Map
-
-An interactive Knowledge Map
