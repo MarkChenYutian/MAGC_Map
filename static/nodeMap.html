@@ -2,13 +2,13 @@
 <head>
     <title>MAGC Map</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset = "utf-8" />
-    <link rel="stylesheet" href="./static/css/application.css" />
+    <link rel="stylesheet" href="/static/css/application.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" type='text/css'>
-    <link rel="shortcut icon" type="image/x-icon" href="./static/favicon.ico" />
+    <link rel="shortcut icon" type="image/x-icon" href="/static/favicon.ico" />
     <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
-    <script type="text/javascript" src="./static/nodeMapUtil.js"></script>
-    <script type="text/javascript" src="./static/nodeLoad.js"></script>
-    <script type="text/javascript" src="./static/uiUtils.js"></script>
+    <script type="text/javascript" src="/static/nodeMapUtil.js"></script>
+    <script type="text/javascript" src="/static/nodeLoad.js"></script>
+    <script type="text/javascript" src="/static/uiUtils.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style type="text/css">
         #mynetwork {
@@ -30,28 +30,28 @@
         <div class="grid">
             <div class="grid__col--12">
             <button class="btn--default" onclick="window.location.href='#nodeCreator'">
-                <img src="./static/img/circleAdd.svg" style="display: inline-block; height: 1.5rem; width: 1.5rem; margin-bottom: -0.4rem;"> New Node
+                <img src="/static/img/circleAdd.svg" style="display: inline-block; height: 1.5rem; width: 1.5rem; margin-bottom: -0.4rem;"> New Node
             </button>
             <button class="btn--default" onclick="coreAddEdge()">
-                <img src="./static/img/linkAdd.svg" style="display: inline-block; height: 1.5rem; width: 1.5rem; margin-bottom: -0.4rem;"> New Edge
+                <img src="/static/img/linkAdd.svg" style="display: inline-block; height: 1.5rem; width: 1.5rem; margin-bottom: -0.4rem;"> New Edge
             </button>
             <button class="btn--default" onclick="window.location.href='#nodeEditor'">
-                <img src="./static/img/nodeEdit.svg" style="display: inline-block; height: 1.5rem; width: 1.5rem; margin-bottom: -0.4rem;"> Edit
+                <img src="/static/img/nodeEdit.svg" style="display: inline-block; height: 1.5rem; width: 1.5rem; margin-bottom: -0.4rem;"> Edit
             </button>
             <button class="btn--default" onclick="window.location.href='#colorEditor'">
-                <img src="./static/img/colorEdit.svg" style="display: inline-block; height: 1.5rem; width: 1.5rem; margin-bottom: -0.4rem;"> Color
+                <img src="/static/img/colorEdit.svg" style="display: inline-block; height: 1.5rem; width: 1.5rem; margin-bottom: -0.4rem;"> Color
             </button>
             <button class="btn--default" onclick="coreRemoveNode()">
-                <img src="./static/img/deleteItem.svg" style="display: inline-block; height: 1.5rem; width: 1.5rem; margin-bottom: -0.4rem;"> Remove Node
+                <img src="/static/img/deleteItem.svg" style="display: inline-block; height: 1.5rem; width: 1.5rem; margin-bottom: -0.4rem;"> Remove Node
             </button>
             <button class="btn--default" onclick="coreRemoveEdge()">
-                <img src="./static/img/deleteLink.svg" style="display: inline-block; height: 1.5rem; width: 1.5rem; margin-bottom: -0.4rem;"> Remove Edge
+                <img src="/static/img/deleteLink.svg" style="display: inline-block; height: 1.5rem; width: 1.5rem; margin-bottom: -0.4rem;"> Remove Edge
             </button>
             <button class="btn--default" onclick="zoomInNetwork()">
-                &nbsp; <img src="./static/img/zoomIn.svg" style="display: inline-block; height: 1.5rem; width: 1.5rem; margin-bottom: -0.4rem;"> &nbsp;
+                &nbsp; <img src="/static/img/zoomIn.svg" style="display: inline-block; height: 1.5rem; width: 1.5rem; margin-bottom: -0.4rem;"> &nbsp;
             </button>
             <button class="btn--default" onclick="zoomOutNetwork()">
-                &nbsp; <img src="./static/img/zoomOut.svg" style="display: inline-block; height: 1.5rem; width: 1.5rem; margin-bottom: -0.4rem;"> &nbsp;
+                &nbsp; <img src="/static/img/zoomOut.svg" style="display: inline-block; height: 1.5rem; width: 1.5rem; margin-bottom: -0.4rem;"> &nbsp;
             </button>
             <p style="margin-bottom: 1px;">
                 Current Scale <span id="curretnScaleDisplay"></span>%

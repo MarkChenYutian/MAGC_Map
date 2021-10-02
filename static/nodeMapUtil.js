@@ -175,16 +175,16 @@ function addContentBlock(nodeID, type){
 
 function modContentBlock(blockID, newContext){
     contentDict[blockID]["context"] = newContext;
-    syncServerModContent(contentID, contentDict[blockID]);
+    syncServerModContent(blockID, contentDict[blockID]);
 }
 
 function delContentBlock(blockID){
     let deletedBlock = JSON.stringify(contentDict[blockID]);
-    contentDict[blockID] = undefined;
+    delete contentDict[blockID];
     for (const [nodeID, contentIDList] of Object.entries(nodeContentLink)){
         nodeContentLink[nodeID] = contentIDList.filter(
             function(value, index, arr){
-                return value != blockID;
+                return value !== blockID;
             }
         )
     }
@@ -196,7 +196,7 @@ function nodeStructToJSON(nodeStruct, contents) {
         "id": nodeStruct.id,
         "label": nodeStruct.label,
         "style": {
-            "color": nodeStruct.color == undefined? "rgba(255, 255, 255, 1)" : nodeStruct.color.background
+            "color": nodeStruct.color === undefined? "rgba(255, 255, 255, 1)" : nodeStruct.color.background
         },
         "block": contents
     }
@@ -225,7 +225,7 @@ function syncServerAddContent(contentBlockID, contentBlock){
             "version": uuid4(),
             "operation": "ADD",
             "property": "content",
-            "value": { contentBlockID : contentBlock },
+            "value": { [contentBlockID] : contentBlock },
             "src": boardName
         }
     );
@@ -238,7 +238,7 @@ function syncServerModContent(contentBlockID, contentBlock){
             "version": uuid4(),
             "operation": "MOD",
             "property": "content",
-            "value": { contentBlockID : contentBlock },
+            "value": { [contentBlockID] : contentBlock },
             "src": boardName
         }
     );
@@ -251,7 +251,7 @@ function syncServerDelContent(contentBlockID, contentBlock){
             "version": uuid4(),
             "operation": "DEL",
             "property": "content",
-            "value": { contentBlockID : contentBlock },
+            "value": { [contentBlockID] : contentBlock },
             "src": boardName
         }
     );
@@ -339,7 +339,7 @@ function createNewBoard(boardName){
 }
 
 function syncSignalSend(jsonObject){
-    fetch("./write", {
+    fetch("/write", {
         method: 'POST',
         body: JSON.stringify(jsonObject)
     });

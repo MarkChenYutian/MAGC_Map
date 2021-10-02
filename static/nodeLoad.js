@@ -103,7 +103,7 @@ function setupNetwork(){
             multiselect: true
         }
     };
-    console.log(data);
+    document.getElementById("networkStatusWindow").innerHTML = '<img src="../static/img/statusSyncFinish.svg" style="display: inline-block; height: 1.5rem; width: 1.5rem; margin-bottom: -0.4rem;"> Online';
     // initialize your network!
     network = new vis.Network(container, data, options);
 
