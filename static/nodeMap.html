@@ -1,8 +1,14 @@
 <html>
 <head>
+    <title>MAGC Map</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset = "utf-8" />
+    <link rel="stylesheet" href="./static/css/application.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" type='text/css'>
+    <link rel="shortcut icon" type="image/x-icon" href="./static/favicon.ico" />
     <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
     <script type="text/javascript" src="./static/nodeMapUtil.js"></script>
     <script type="text/javascript" src="./static/nodeLoad.js"></script>
+    <script type="text/javascript" src="./static/uiUtils.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style type="text/css">
         #mynetwork {
@@ -14,22 +20,138 @@
     </style>
 </head>
 
-<button onclick="coreAddNode('test')">Add Node</button>
-<button onclick="coreRenameNode('renamed')">Rename</button>
-<button onclick="coreAddEdge()">Add New Edge</button>
-<button onclick="coreRemoveNode()">Delete Node</button>
-<button onclick="coreRemoveEdge()">Delete Edge</button>
-<button onclick="coreChangeColor('#EBEBC0')">Change Color</button>
-<button onclick="zoomInNetwork()"> + </button>
-<button onclick="zoomOutNetwork()"> - </button>
-<p>
-    Current Scale <span id="curretnScaleDisplay"></span>%
-</p>
-
 <body>
+    <div class="grid" style="box-shadow: 0 0 8rem rgb(0 0 0 / 20%);">
+        <header class="grid__col--12 panel--padded--centered" role="banner">
+            <div style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between; margin-left: 1rem; margin-right: 1rem;">
+                <h2 style="margin-top: 0; color: #222">Sample Title</h2>
+                <div id="networkStatusWindow"></div>
+            </div>
+        <div class="grid">
+            <div class="grid__col--12">
+            <button class="btn--default" onclick="window.location.href='#nodeCreator'">
+                <img src="./static/img/circleAdd.svg" style="display: inline-block; height: 1.5rem; width: 1.5rem; margin-bottom: -0.4rem;"> New Node
+            </button>
+            <button class="btn--default" onclick="coreAddEdge()">
+                <img src="./static/img/linkAdd.svg" style="display: inline-block; height: 1.5rem; width: 1.5rem; margin-bottom: -0.4rem;"> New Edge
+            </button>
+            <button class="btn--default" onclick="window.location.href='#nodeEditor'">
+                <img src="./static/img/nodeEdit.svg" style="display: inline-block; height: 1.5rem; width: 1.5rem; margin-bottom: -0.4rem;"> Edit
+            </button>
+            <button class="btn--default" onclick="window.location.href='#colorEditor'">
+                <img src="./static/img/colorEdit.svg" style="display: inline-block; height: 1.5rem; width: 1.5rem; margin-bottom: -0.4rem;"> Color
+            </button>
+            <button class="btn--default" onclick="coreRemoveNode()">
+                <img src="./static/img/deleteItem.svg" style="display: inline-block; height: 1.5rem; width: 1.5rem; margin-bottom: -0.4rem;"> Remove Node
+            </button>
+            <button class="btn--default" onclick="coreRemoveEdge()">
+                <img src="./static/img/deleteLink.svg" style="display: inline-block; height: 1.5rem; width: 1.5rem; margin-bottom: -0.4rem;"> Remove Edge
+            </button>
+            <button class="btn--default" onclick="zoomInNetwork()">
+                &nbsp; <img src="./static/img/zoomIn.svg" style="display: inline-block; height: 1.5rem; width: 1.5rem; margin-bottom: -0.4rem;"> &nbsp;
+            </button>
+            <button class="btn--default" onclick="zoomOutNetwork()">
+                &nbsp; <img src="./static/img/zoomOut.svg" style="display: inline-block; height: 1.5rem; width: 1.5rem; margin-bottom: -0.4rem;"> &nbsp;
+            </button>
+            <p style="margin-bottom: 1px;">
+                Current Scale <span id="curretnScaleDisplay"></span>%
+            </p>
+            </div>
+        </div>
+        </header>
+    </div>
+
+
+
+<div class="popup" id="nodeCreator">
+    <div
+        class="popup-inner"
+        style=" background-color: rgba(205, 205, 205, 0.5); 
+                background-position: bottom right;
+                backdrop-filter: blur(6px);
+                -webkit-backdrop-filter: blur(6px);"
+    >
+    <div class="popup_in"> 
+        <h2 class="toc_ignore" style="color: #333;">Name of New Node: </h2>
+        <form class="text">
+            <input type = "text" id = "newNodeName" style="background-color: transparent;">
+        </form>
+        <div class="popup__close" style="background-color: rgba(255, 255, 255, 0.5);
+                                        background-position: bottom right;
+                                        backdrop-filter: blur(6px);
+                                        -webkit-backdrop-filter: blur(6px);">
+            <input type="button" name="close" value="X" style="background-color:rgba(255,255,255,0);color: #e71212;"onclick="window.location.href='#'"; />
+        </div>
+    
+    </div>
+    <div style="display: flex; flex-direction: row-reverse; margin-right: 3rem; margin-left: 3rem;">
+        <button class="btn--success" href="#" onclick="coreAddNode(document.getElementById('newNodeName').value); window.location.href='#';">&nbsp;&nbsp;Confirm&nbsp;&nbsp;</button>
+    </div>
+    </div>
+</div>
+
+
+
+<div class="popup" id="nodeEditor">
+<div
+    class="popup-inner"
+    style=" background-color: rgba(205, 205, 205, 0.5); 
+            background-position: bottom right;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);"
+>
+    <div class="popup_in"> 
+    <h2 class="toc_ignore" style="color: #333;">Rename a Node: </h2>
+    <form class="text" style="background-color: transparent;">
+        <input type="text" style="background-color: transparent;" id="renameInputBox">
+    </form>
+    <div class="popup__close" style="background-color: rgba(255, 255, 255, 0.5);
+                                    background-position: bottom right;
+                                    backdrop-filter: blur(6px);
+                                    -webkit-backdrop-filter: blur(6px);">
+        <input type="button" name="close" value="X" style="background-color:rgba(255,255,255,0);color: #e71212;"onclick="window.location.href='#'"; />
+    </div>
+    
+    </div>
+    <div style="display: flex; flex-direction: row-reverse; margin-right: 3rem; margin-left: 3rem;">
+        <button class="btn--success" href="#" onclick="coreRenameNode(document.getElementById('renameInputBox').value); window.location.href='#';">&nbsp;&nbsp;Confirm&nbsp;&nbsp;</button>
+    </div>
+</div>
+</div>
+
+
+
+<div class="popup" id="colorEditor">
+    <div
+        class="popup-inner"
+        style=" background-color: rgba(205, 205, 205, 0.5); 
+                background-position: bottom right;
+                backdrop-filter: blur(6px);
+                -webkit-backdrop-filter: blur(6px);"
+    >
+    <div class="popup_in"> 
+        <h2 class="toc_ignore" style="color: #333;">Color of New Node: </h2>
+        <input type = "color" id = "newColorInput" style="background-color: transparent; height: 20%;">
+        <div class="popup__close" style="background-color: rgba(255, 255, 255, 0.5);
+                                        background-position: bottom right;
+                                        backdrop-filter: blur(6px);
+                                        -webkit-backdrop-filter: blur(6px);">
+            <input type="button" name="close" value="X" style="background-color:rgba(255,255,255,0);color: #e71212;"onclick="window.location.href='#'"; />
+        </div>
+    
+    </div>
+    <div style="display: flex; flex-direction: row-reverse; margin-right: 3rem; margin-left: 3rem;">
+        <button class="btn--success" href="#" onclick="coreChangeColor(document.getElementById('newColorInput').value); window.location.href='#';">&nbsp;&nbsp;Confirm&nbsp;&nbsp;</button>
+    </div>
+    </div>
+</div>
+
+
+
 <div id="mynetwork"></div>
 <script>
     loadFile("sample");
+    setInterval(networkStatusIndicator, 3000);
 </script>
 </body>
 
