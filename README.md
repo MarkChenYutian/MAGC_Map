@@ -2,6 +2,10 @@
 
 An interactive Knowledge Map
 
+# How to Start
+
+http://172.26.65.149/ (Accessible Through CMU-Secure)
+
 ## Update Protocol v2
 
 The Update Protocol (UP) is a set of data transfer protocol used to transfer data between client and server.
