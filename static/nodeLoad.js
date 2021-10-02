@@ -1,5 +1,5 @@
 function loadFile(fileName) {
-    fetch("172.26.17.47/read/{}".format(fileName)).then(
+    fetch("http://172.26.17.47/read/" + fileName).then(
         (response) => {
             parseJSON(response.json()).then(
                 (result) => {
