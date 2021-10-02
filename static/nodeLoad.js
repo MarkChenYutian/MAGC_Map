@@ -1,33 +1,117 @@
-function loadFile(fileName) {
-    fetch("http://172.26.17.47/read/" + fileName).then(
-        (response) => {
-            parseJSON(response.json()).then(
-                (result) => {
-                    var nodes = result[0];
-                    var edges = result[1];
-                }
-            )
-        }
-    ).catch(
-        console.log("Failed to Fetch from Source.")
-    )
+function synchronizeLoad(fileName) {
+    var httpRequest = new XMLHttpRequest();
+    httpRequest.addEventListener("load", getData);
+    console.log("---");
+    httpRequest.open('GET', "/read/" + fileName);
+    httpRequest.send();
 }
 
-function parseJSON(jsonText) {
-    return [
-        [
-            {id: "1", label: 'Node 1'},
-            {id: "2", label: 'Node 2'},
-            {id: "3", label: 'Node 3'},
-            {id: "4", label: 'Node 4'},
-            {id: "5", label: 'Node 5'}
-        ],
-        [
-            {from: "1", to: "3"},
-            {from: "3", to: "1"},
-            {from: "1", to: "2"},
-            {from: "2", to: "4"},
-            {from: "2", to: "5"}
-        ]
-    ]
+var nodes;
+var edges;
+var network;
+
+function getData() {
+    let rawJSON = this.responseText;
+    let dataObject = JSON.parse(rawJSON);
+    let nodeList = [];
+    let edgeList = [];
+    for (let i = 0; i < dataObject["nodes"].length; i ++){
+        nodeList.push(
+            {
+                id: dataObject["nodes"][i]["id"],
+                label: dataObject["nodes"][i]["label"],
+                color: {
+                    background: dataObject["nodes"][i]["style"]["color"]
+                },
+                content: dataObject["nodes"][i]["content"]
+            }
+        )
+    }
+    for (let i = 0; i < dataObject["edges"].length; i ++){
+        edgeList.push(
+            {
+                id: dataObject["edges"][i]["id"],
+                from: dataObject["edges"][i]["from"],
+                to: dataObject["edges"][i]["to"]
+            }
+        )
+    }
+    nodes = new vis.DataSet(nodeList);
+    edges = new vis.DataSet(edgeList);
+    setupNetwork();
+}
+
+function setupNetwork(){
+    // provide the data in the vis format
+    var data = {
+        nodes: nodes,
+        edges: edges
+    }
+
+    // create a network
+    var container = document.getElementById('mynetwork');
+
+    var options = {
+        autoResize: true,
+        height: '100%',
+        width: '100%',
+        layout: {
+            randomSeed: 424
+        },
+        physics: {
+            enabled: true,
+            repulsion: {
+                nodeDistance: 300,
+                springLength: 600,
+                damping: 0.2
+            },
+            solver: 'repulsion'
+        },
+        nodes: {
+            shape: "box",
+            size: 30,
+            font: {
+            size: 32,
+            },
+            borderWidth: 2,
+            margin: 20,
+            shadow: true,
+            color: {
+                background: "#fefefe",
+                border: "rgba(0, 0, 0, 0)",
+                hover: {
+                    background: "#eeeeee",
+                    border: "rgba(0, 0, 0, 0.3)",
+                }
+            }
+        },
+        edges: {
+            width: 2,
+            shadow: true,
+            color: {
+                color: "#aaaaaa"
+            }
+        },
+        interaction: {
+            hover: true,
+            multiselect: true
+        }
+    };
+    console.log(data);
+    // initialize your network!
+    network = new vis.Network(container, data, options);
+
+    eventUpdateScale();
+
+    network.on('selectNode', function(properties) {
+        window.location.href = "#" + properties.nodes;
+    });
+
+    network.on('zoom', function(properties) {
+        eventUpdateScale();
+    })
+}
+
+function loadFile(fileName) {
+    synchronizeLoad(fileName);
 }

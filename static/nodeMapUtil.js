@@ -81,10 +81,12 @@ function coreRemoveNode() {
 
     if (selectedNodes.length != 1) { return 2; }
     try {
+        let removedEdges = edges.get(selectedEdges);
+        let removedNodes = nodes.get(selectedNodes);
         nodes.remove(selectedNodes);
         edges.remove(selectedEdges);
-        syncServerRemoveNodes(nodes);
-        syncServerRemoveEdges(edges);
+        syncServerRemoveNodes(removedNodes);
+        syncServerRemoveEdges(removedEdges);
         return 0;
     } catch (error) {
         console.log(error);
@@ -161,13 +163,33 @@ function zoomOutNetwork(){
     eventUpdateScale();
 }
 
+function nodeStructToJSON(nodeStruct) {
+    return {
+        "id": nodeStruct.id,
+        "label": nodeStruct.label,
+        "style": {
+            "color": nodeStruct.color == undefined? "rgba(0, 0, 0, 0)" : nodeStruct.color.background
+        },
+        "content": nodeStruct.content == undefined? [] : nodeStruct.content
+    }
+}
+
+function edgeStructToJSON(edgeStruct) {
+    return {
+        "id": edgeStruct.id,
+        "from": edgeStruct.from,
+        "to": edgeStruct.to,
+        "options":{}
+    }
+}
+
 function syncServerAddNode(nodeStruct) {
     syncSignalSend(
         {
             "version": uuid4(),
             "operation": "ADD",
             "property": "node",
-            "value": JSON.stringify(nodeStruct)
+            "value": nodeStructToJSON(nodeStruct)
         }
     );
 }
@@ -178,31 +200,35 @@ function syncServerAddEdge(newEdge) {
             "version": uuid4(),
             "operation": "ADD",
             "property": "edge",
-            "value": JSON.stringify(newEdge)
+            "value": edgeStructToJSON(newEdge)
         }
     );
 }
 
-function syncServerRemoveNodes(nodeIDList) {
-    syncSignalSend(
-        {
-            "version": uuid4(),
-            "operation": "DEL",
-            "property": "node",
-            "value": JSON.stringify(nodeIDList)
-        }
-    );
+function syncServerRemoveNodes(nodeList) {
+    for (let i = 0; i < nodeList.length; i ++){
+        syncSignalSend(
+            {
+                "version": uuid4(),
+                "operation": "DEL",
+                "property": "node",
+                "value": nodeStructToJSON(nodeList[i])
+            }
+        );
+    }
 }
 
-function syncServerRemoveEdges(edgeIDList) {
-    syncSignalSend(
-        {
-            "version": uuid4(),
-            "operation": "DEL",
-            "property": "edge",
-            "value": JSON.stringify(edgeIDList)
-        }
-    );
+function syncServerRemoveEdges(edgeList) {
+    for (let i = 0; i < edgeList.length; i ++){
+        syncSignalSend(
+            {
+                "version": uuid4(),
+                "operation": "DEL",
+                "property": "edge",
+                "value": edgeStructToJSON(edgeList[i])
+            }
+        );
+    }
 }
 
 function syncServerPropChange(nodeStruct){
@@ -211,13 +237,13 @@ function syncServerPropChange(nodeStruct){
             "version": uuid4(),
             "operation": "MOD",
             "property": "node",
-            "value": JSON.stringify(nodeStruct)
+            "value": nodeStructToJSON(nodeStruct)
         }
     );
 }
 
 function syncSignalSend(jsonObject){
-    fetch("http://172.26.17.47/write", {
+    fetch("./write", {
         method: 'POST',
         body: JSON.stringify(jsonObject)
     });

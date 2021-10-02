@@ -15,8 +15,11 @@ def hello_world():
 def writeFile():
     # with open('/data/test.json', 'w') as f:
     #     json.dump(request.data, f)
-    print(json.dumps(request.data.decode('utf-8')))
-    return "static/nodeMap.html"
+    data = json.loads(request.data.decode('utf-8'))
+    with open("./data/temp.json", "a") as f:
+        json.dump(data, f, indent=4)
+        f.write("\n")
+    return ""
 
 
 @app.route("/read/<fileName>", methods=["GET"])

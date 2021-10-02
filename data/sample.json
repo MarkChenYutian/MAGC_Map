@@ -29,6 +29,12 @@
             "label": "Node 5",
             "style": {},
             "content": []
+        },
+        {
+            "id": "6",
+            "label": "Node 6",
+            "style": {},
+            "content": []
         }
     ],
     "edges": [
