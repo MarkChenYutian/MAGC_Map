@@ -67,7 +67,7 @@ function coreRenameNode(newName) {
     }
 }
 
-function coreRemoveNode(){
+function coreRemoveNode() {
     /*
         When this function is called, it will detect which node the
         user selected automatically.
@@ -77,12 +77,12 @@ function coreRemoveNode(){
         return 2 - remove Fail since the user selected multiple node
     */
     let selectedNodes = network.getSelectedNodes();
-    let selecterEdges = network.getSelectedEdges();
+    let selectedEdges = network.getSelectedEdges();
 
     if (selectedNodes.length != 1) { return 2; }
     try {
         nodes.remove(selectedNodes);
-        edges.remove(selecterEdges);
+        edges.remove(selectedEdges);
         syncServerRemoveNodes(nodes);
         syncServerRemoveEdges(edges);
         return 0;
@@ -90,6 +90,75 @@ function coreRemoveNode(){
         console.log(error);
         return 1;
     }
+}
+
+function coreRemoveEdge() {
+    /*
+        When this function is called, it will detect which node the user selecterd automatically
+
+        return 0 - remove successfully
+        return 1 - remove Fail (unknown reason)
+        return 2 - remove Fail since the user does not select edges
+    */
+   let selectedEdges = network.getSelectedEdges();
+   if (selectedEdges.length == 0) { return 2; }
+   try {
+       edges.remove(selectedEdges);
+       syncServerRemoveEdges(edges);
+       return 0;
+   } catch (error) {
+       console.log(error);
+       return 1;
+   }
+}
+
+function coreChangeColor(colorString) {
+    /*
+        When this function is called, it will detect which node user selected automatically and
+        apply color to it
+
+        colorString is some css-like string like "rgba(220, 220, 220, 0.5)"
+
+        return 0 - colorChanged Successfully
+        return 1 - color applied fail (unknown reason)
+        return 2 - color applied fail since user has no selected node
+    */
+    let selectNodes = network.getSelectedNodes();
+    if (selectNodes.length == 0) { return 2; }
+    try{
+        let newNodes = nodes.get(selectNodes);
+        for (let i = 0; i < newNodes.length; i ++){
+            if (newNodes.color == undefined){
+                newNodes[i].color = {background: colorString};
+            }
+            else {
+                newNodes[i].color.background = colorString;
+            }
+            syncServerPropChange(selectNodes[i], "cplor", colorString);
+        }
+        nodes.update(newNodes);
+        return 0;
+    } catch (error) {
+        console.log(error);
+        return 1;
+    }
+}
+
+function eventUpdateScale(){
+    let scale = network.getScale() * 100;
+    let percentage = scale.toFixed(2);
+    let updateElem = document.getElementById("curretnScaleDisplay");
+    updateElem.innerText = percentage;
+}
+
+function zoomInNetwork(){
+    network.moveTo({ scale: network.getScale() * 1.5 });
+    eventUpdateScale();
+}
+
+function zoomOutNetwork(){
+    network.moveTo({ scale: network.getScale() / 1.5 });
+    eventUpdateScale();
 }
 
 function syncServerAddNode(nodeStruct) {
@@ -109,5 +178,9 @@ function syncServerRemoveNodes(nodeIDList) {
 }
 
 function syncServerRemoveEdges(edgeIDList) {
+
+}
+
+function syncServerPropChange(nodeID, prop, newValue){
 
 }

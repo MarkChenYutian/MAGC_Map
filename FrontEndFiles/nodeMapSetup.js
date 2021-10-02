@@ -57,7 +57,13 @@ var options = {
 // initialize your network!
 var network = new vis.Network(container, data, options);
 
-network.on( 'selectNode', function(properties) {
-    window.location.href = "#" + properties.nodes + '_card';
+eventUpdateScale();
+
+network.on('selectNode', function(properties) {
+    window.location.href = "#" + properties.nodes;
 });
+
+network.on('zoom', function(properties) {
+    eventUpdateScale();
+})
 

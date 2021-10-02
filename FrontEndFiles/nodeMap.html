@@ -20,7 +20,6 @@
             {id: "4", label: 'Node 4'},
             {id: "5", label: 'Node 5'}
         ]);
-
         // create an array with edges
         var edges = new vis.DataSet([
             {from: "1", to: "3"},
@@ -36,7 +35,13 @@
 <button onclick="coreRenameNode('renamed')">Rename</button>
 <button onclick="coreAddEdge()">Add New Edge</button>
 <button onclick="coreRemoveNode()">Delete Node</button>
-
+<button onclick="coreRemoveEdge()">Delete Edge</button>
+<button onclick="coreChangeColor('#EBEBC0')">Change Color</button>
+<button onclick="zoomInNetwork()"> + </button>
+<button onclick="zoomOutNetwork()"> - </button>
+<p>
+    Current Scale <span id="curretnScaleDisplay"></span>%
+</p>
 
 <body>
 <div id="mynetwork"></div>
